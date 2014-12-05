@@ -2,25 +2,30 @@
 
 
 void RGBDReader::ICL_NUIM_Reader::readCloud(const std::string filename, OutputCloud &cloud) {
-    // prepare cloud
     cloud.resize(width * height);
     cloud.width = width;
     cloud.height = height;
 
-    float depth_value;
+    std::vector<float> depth_value(width * height);
     std::ifstream file;
     file.open(filename.c_str());
 
-    for (size_t y = 0, n = 0; y < height; y++) {
-        for (size_t x = 0; x < width; x++, n++) {
-            file >> depth_value;
+    for (size_t i = 0; i < width * height; i++) {
+        file >> depth_value[i]; 
+    }
 
-            float X = (x - cx) / fx;
-            float Y = (y - cy) / -fy;
-            float Z = depth_value / sqrt(X * X + Y * Y + 1);
+#ifdef _OPENMP
+#pragma omp parallel for shared(cloud, depth_value)
+#endif
+    for (size_t i = 0; i < width * height; i++) {
+        int x = i % width;
+        int y = i / width;
 
-            cloud.points[n] = pcl::PointXYZ(X * Z, Y * Z, Z);
-        }
+        float X = (x - cx) / fx;
+        float Y = (y - cy) / -fy;
+        float Z = depth_value[i] / sqrt(X * X + Y * Y + 1);
+
+        cloud.points[i] = pcl::PointXYZ(X * Z, Y * Z, Z);
     }
 
     file.close();

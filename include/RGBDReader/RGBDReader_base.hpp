@@ -1,8 +1,10 @@
 #ifndef RGBDREADER_HH
 #define RGBDREADER_HH
 
+#include <vector>
 #include <fstream>
 #include <string>
+
 #include <pcl/common/common_headers.h>
 
 
