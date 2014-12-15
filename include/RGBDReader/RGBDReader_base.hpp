@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 
+#include <opencv2/opencv.hpp>
 #include <pcl/common/common_headers.h>
 
 
@@ -40,8 +41,13 @@ public:
     /**
      * @brief Reads the content of the depth file and initializes a
      * pcl::pcl::PointCloud.
+     *
+     * @param filename [in] Path to a depth text file from the ICL-NUIM dataset.
+     * @param cloud [in,out] Resulting cloud.
      */
     void readCloud(const std::string filename, OutputCloud &cloud);
+
+    void readMat(const std::string filename, cv::Mat *img);
 
 private:
     const int width;
