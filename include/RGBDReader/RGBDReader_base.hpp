@@ -65,7 +65,9 @@ public:
             float Y = (y - cy) / -fy;
             float Z = depth_value[i] / sqrt(X * X + Y * Y + 1);
 
-            cloud.points[i] = pcl::PointXYZ(X * Z, Y * Z, Z);
+            cloud.points[i].x = X * Z;
+            cloud.points[i].y = Y * Z;
+            cloud.points[i].z = Z;
         }
 
         file.close();
