@@ -11,17 +11,12 @@
 
 namespace RGBDReader {
 
-typedef pcl::PointCloud<pcl::PointXYZ> OutputCloud;
-
 /**
  *  @class Reader
  *
  *  @brief Abstract reader class to handle differente benchmarks readers.
  */
-class Reader {
-public:
-    virtual void readCloud(const std::string filename, OutputCloud &cloud) = 0;
-};
+class Reader {};
 
 
 /**
@@ -45,7 +40,36 @@ public:
      * @param filename [in] Path to a depth text file from the ICL-NUIM dataset.
      * @param cloud [in,out] Resulting cloud.
      */
-    void readCloud(const std::string filename, OutputCloud &cloud);
+    template<class OutputCloud>
+    void readCloud(const std::string filename, OutputCloud &cloud) {
+        cloud.resize(width * height);
+        cloud.width = width;
+        cloud.height = height;
+
+        std::vector<float> depth_value(width * height);
+        std::ifstream file;
+        file.open(filename.c_str());
+
+        for (size_t i = 0; i < width * height; i++) {
+            file >> depth_value[i]; 
+        }
+
+        #ifdef _OPENMP
+        #pragma omp parallel for shared(cloud, depth_value)
+        #endif
+        for (size_t i = 0; i < width * height; i++) {
+            int x = i % width;
+            int y = i / width;
+
+            float X = (x - cx) / fx;
+            float Y = (y - cy) / -fy;
+            float Z = depth_value[i] / sqrt(X * X + Y * Y + 1);
+
+            cloud.points[i] = pcl::PointXYZ(X * Z, Y * Z, Z);
+        }
+
+        file.close();
+    }
 
     void readMat(const std::string filename, cv::Mat *img);
 

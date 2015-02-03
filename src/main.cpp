@@ -24,8 +24,7 @@ double computeCloudResolution(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) {
     pcl::search::KdTree<pcl::PointXYZ> tree;
     tree.setInputCloud(cloud);
 
-    for (size_t i = 0; i < cloud->size (); ++i)
-    {
+    for (size_t i = 0; i < cloud->size (); ++i) {
         if (! pcl_isfinite ((*cloud)[i].x))
         {
             continue;
