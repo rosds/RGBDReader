@@ -5,7 +5,7 @@ project (RGBDReader)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 find_package (Boost 1.46 COMPONENTS program_options REQUIRED)
-find_package (PCL 1.8 REQUIRED)
+find_package (PCL REQUIRED)
 find_package (OpenCV REQUIRED)
 find_package (OpenMP)
 
