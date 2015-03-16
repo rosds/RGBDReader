@@ -23,7 +23,7 @@ include_directories (include
 
 add_library (RGBDReader SHARED ${SRC})
 
-add_executable (display src/main.cpp)
+add_executable (display EXCLUDE_FROM_ALL  src/main.cpp)
 target_link_libraries (display RGBDReader 
     ${Boost_LIBRARIES} 
     ${PCL_LIBRARIES}

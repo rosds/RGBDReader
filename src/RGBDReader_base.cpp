@@ -17,3 +17,9 @@ void RGBDReader::ICL_NUIM_Reader::readMat(const std::string filename, cv::Mat *i
 
     cv::normalize(*img, *img, 0, 1, cv::NORM_MINMAX, CV_32F);
 }
+
+
+void RGBDReader::RGBD_TUM_Reader::readMat(const std::string filename, cv::Mat *img) {
+    *img = cv::imread(filename, CV_LOAD_IMAGE_ANYDEPTH);
+    cv::normalize(*img, *img, 0, 1, cv::NORM_MINMAX, CV_32F);
+}

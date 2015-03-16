@@ -16,7 +16,17 @@ namespace RGBDReader {
  *
  *  @brief Abstract reader class to handle differente benchmarks readers.
  */
-class Reader {};
+class Reader {
+public:
+    int width;
+    int height;
+
+    // Camera parameters
+    float fx;
+    float fy;
+    float cx;
+    float cy;
+};
 
 
 /**
@@ -24,14 +34,14 @@ class Reader {};
  */
 class ICL_NUIM_Reader : public Reader{
 public:
-    ICL_NUIM_Reader() : 
-        width(640), 
-        height(480), 
-        fx(481.2f), 
-        fy(-480.0f), 
-        cx(319.5f), 
-        cy(239.5f) {}
-    ~ICL_NUIM_Reader() {}
+    ICL_NUIM_Reader() {
+        width = 640; 
+        height = 480; 
+        fx = 481.2f; 
+        fy = -480.0f; 
+        cx = 319.5f;
+        cy = 239.5f;
+    }
 
     /**
      * @brief Reads the content of the depth file and initializes a
@@ -74,16 +84,61 @@ public:
     }
 
     void readMat(const std::string filename, cv::Mat *img);
+};
 
-private:
-    const int width;
-    const int height;
 
-    // Camera parameters
-    const float fx;
-    const float fy;
-    const float cx;
-    const float cy;
+class RGBD_TUM_Reader : public Reader{
+public:
+
+    RGBD_TUM_Reader() { 
+        width = 640;
+        height = 480; 
+        fx = 525.0f;
+        fy = 525.0f; 
+        cx = 319.5f; 
+        cy = 239.5f;
+    }
+
+    /**
+     * @brief Reads the content of the depth file and initializes a
+     * pcl::pcl::PointCloud.
+     *
+     * @param filename [in] Path to a depth text file from the ICL-NUIM dataset.
+     * @param cloud [in,out] Resulting cloud.
+     */
+    template<class OutputCloud>
+    void readCloud(const std::string filename, OutputCloud &cloud) {
+        cloud.resize(width * height);
+        cloud.width = width;
+        cloud.height = height;
+
+        std::ifstream file;
+        file.open(filename.c_str());
+
+        cv::Mat img = cv::imread(filename, CV_LOAD_IMAGE_ANYDEPTH);
+        width = img.cols;
+        height = img.rows;
+
+        #ifdef _OPENMP
+        #pragma omp parallel for shared(cloud, img)
+        #endif
+        for (size_t i = 0; i < width * height; i++) {
+            int x = i % width;
+            int y = i / width;
+
+            float Z = static_cast<float>(img.at<unsigned short>(i)) / 5000.0f;
+            float X = (x - cx) * Z / fx;
+            float Y = (y - cy) * Z / fy;
+
+            cloud.points[i].x = X;
+            cloud.points[i].y = Y;
+            cloud.points[i].z = Z;
+        }
+
+        file.close();
+    }
+
+    void readMat(const std::string filename, cv::Mat *img);
 };
 
 } // namespace RGBDReader

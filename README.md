@@ -1,7 +1,8 @@
-RGBDReader
-==========
+#RGBDReader
 
-Program to read PCL pointclouds from Benchmarks
+Read from RGB-D datasets to point cloud structures of the [PCL Library](http://pointclouds.org/).
 
-Currently it only reads the depth images of the
-[ICL-NUIM](http://www.doc.ic.ac.uk/~ahanda/VaFRIC/iclnuim.html) benchmark.
+At the moment it only read depth images from:
+
+* [ICL-NUIM](http://www.doc.ic.ac.uk/~ahanda/VaFRIC/iclnuim.html)
+* [TUM RGB-D](http://vision.in.tum.de/data/datasets/rgbd-dataset)
