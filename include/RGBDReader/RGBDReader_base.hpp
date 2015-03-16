@@ -6,6 +6,7 @@
 #include <string>
 
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
 #include <pcl/common/common_headers.h>
 
 
@@ -128,7 +129,7 @@ public:
 
             float Z = static_cast<float>(img.at<unsigned short>(i)) / 5000.0f;
             float X = (x - cx) * Z / fx;
-            float Y = (y - cy) * Z / fy;
+            float Y = (y - cy) * Z / -fy;
 
             cloud.points[i].x = X;
             cloud.points[i].y = Y;
