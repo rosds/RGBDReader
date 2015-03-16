@@ -22,6 +22,7 @@ include_directories (include
     ${OpenCV_INCLUDE_DIRS})
 
 add_library (RGBDReader SHARED ${SRC})
+target_link_libraries(RGBDReader ${OpenCV_LIBRARIES})
 
 add_executable (display EXCLUDE_FROM_ALL src/main.cpp)
 target_link_libraries (display RGBDReader 
