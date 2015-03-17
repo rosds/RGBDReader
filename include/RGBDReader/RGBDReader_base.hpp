@@ -124,12 +124,21 @@ public:
         #pragma omp parallel for shared(cloud, img)
         #endif
         for (size_t i = 0; i < width * height; i++) {
+
+            float X, Y, Z;
             int x = i % width;
             int y = i / width;
 
-            float Z = static_cast<float>(img.at<unsigned short>(i)) / 5000.0f;
-            float X = (x - cx) * Z / fx;
-            float Y = (y - cy) * Z / -fy;
+            unsigned short depth = img.at<unsigned short>(i);
+
+            // Handle non depth information
+            if (depth == 0) {
+                X = Y = Z = std::numeric_limits<float>::quiet_NaN();
+            } else {
+                Z = static_cast<float>(depth) / 5000.0f;
+                X = (x - cx) * Z / fx;
+                Y = (y - cy) * Z / -fy;
+            }
 
             cloud.points[i].x = X;
             cloud.points[i].y = Y;
