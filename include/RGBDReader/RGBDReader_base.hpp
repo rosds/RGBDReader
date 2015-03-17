@@ -124,6 +124,8 @@ public:
         width = img.cols;
         height = img.rows;
 
+        bool dense = true;
+
         #ifdef _OPENMP
         #pragma omp parallel for shared(cloud, img)
         #endif
@@ -138,6 +140,7 @@ public:
             // Handle non depth information
             if (depth == 0) {
                 X = Y = Z = std::numeric_limits<float>::quiet_NaN();
+                dense = false;
             } else {
                 Z = static_cast<float>(depth) / 5000.0f;
                 X = (x - cx) * Z / fx;
@@ -148,6 +151,8 @@ public:
             cloud.points[i].y = Y;
             cloud.points[i].z = Z;
         }
+
+        cloud.is_dense = dense;
 
         file.close();
     }
