@@ -1,4 +1,4 @@
-#include <RGBDReader/RGBDReader_base.hpp>
+#include <RGBDReader/RGBDReader.h>
 
 
 void RGBDReader::ICL_NUIM_Reader::readMat(const std::string filename, cv::Mat *img) {

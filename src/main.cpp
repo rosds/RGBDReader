@@ -12,7 +12,7 @@
 #include <pcl/visualization/pcl_visualizer.h>
 #include <boost/program_options.hpp>
 
-#include <RGBDReader/RGBDReader_base.hpp>
+#include <RGBDReader/RGBDReader.h>
 
 
 int main(int argc, const char *argv[]) {

@@ -2,30 +2,55 @@ cmake_minimum_required (VERSION 2.8)
 
 project (RGBDReader)
 
+set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-find_package (Boost 1.46 COMPONENTS program_options REQUIRED)
-find_package (PCL REQUIRED)
-find_package (OpenCV REQUIRED)
-find_package (OpenMP)
 
+############################################################################### 
+#   Find packages                                                             #
+############################################################################### 
+
+#   Boost C++ Library
+find_package (Boost 1.46 COMPONENTS program_options REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+link_directories(${Boost_LIBRARY_DIRS})
+
+#   Point Cloud Library
+find_package (PCL REQUIRED)
+include_directories (${PCL_INCLUDE_DIRS})
+link_directories (${PCL_LIBRARY_DIRS})
+
+#   OpenCV Library
+find_package (OpenCV REQUIRED)
+include_directories (${OpenCV_INCLUDE_DIRS})
+link_directories (${OpenCV_LIBRARY_DIRS})
+
+#   OpenMP Library
+find_package (OpenMP)
 if (OPENMP_FOUND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-set (SRC src/RGBDReader_base.cpp)
+include_directories (include)
 
-include_directories (include 
-    ${Boost_INCLUDE_DIRS} 
-    ${PCL_INCLUDE_DIRS}
-    ${OpenCV_INCLUDE_DIRS})
 
+############################################################################### 
+#   RGBDReader Library build                                                  #
+############################################################################### 
+
+set (SRC src/RGBDReader.cpp)
 add_library (RGBDReader SHARED ${SRC})
 target_link_libraries(RGBDReader ${OpenCV_LIBRARIES})
+
+
+############################################################################### 
+#   Build sample visualizer                                                   #
+############################################################################### 
 
 add_executable (display EXCLUDE_FROM_ALL src/main.cpp)
 target_link_libraries (display RGBDReader 
     ${Boost_LIBRARIES} 
     ${PCL_LIBRARIES}
-    ${OpenCV_LIBRARIES})
+    ${OpenCV_LIBRARIES}
+)
