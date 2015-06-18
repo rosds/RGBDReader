@@ -2,17 +2,28 @@
 
 template<class OutputCloud>
 void RGBDReader::ICL_NUIM_Reader::readCloud(const std::string filename, OutputCloud &cloud) {
-    cloud.resize(width * height);
+    std::ifstream file;
+    std::vector<float> depth_value(width * height);
+
+    try {
+        file.open(filename.c_str());
+
+        for (size_t i = 0; i < width * height; i++) {
+            file >> depth_value[i]; 
+        }
+
+        file.close();
+    } catch(std::ifstream::failure e) {
+        std::cerr << "[RGBDReader::readCloud] Failure at reading file ";
+        std::cerr << filename;
+        std::cerr << ", returning empty cloud." << std::endl;
+        cloud.clear();
+        return;
+    }
+
     cloud.width = width;
     cloud.height = height;
-
-    std::vector<float> depth_value(width * height);
-    std::ifstream file;
-    file.open(filename.c_str());
-
-    for (size_t i = 0; i < width * height; i++) {
-        file >> depth_value[i]; 
-    }
+    cloud.resize(width * height);
 
     #ifdef _OPENMP
     #pragma omp parallel for shared(cloud, depth_value)
@@ -29,24 +40,29 @@ void RGBDReader::ICL_NUIM_Reader::readCloud(const std::string filename, OutputCl
         cloud.points[i].y = Y * Z;
         cloud.points[i].z = Z;
     }
-
-    file.close();
 }
+
 
 template<class OutputCloud>
 void RGBDReader::RGBD_TUM_Reader::readCloud(const std::string filename, OutputCloud &cloud) {
-    cloud.resize(width * height);
-    cloud.width = width;
-    cloud.height = height;
-
-    std::ifstream file;
-    file.open(filename.c_str());
 
     cv::Mat img = cv::imread(filename, CV_LOAD_IMAGE_ANYDEPTH);
+    if (!img.data) {
+        std::cerr << "[RGBDReader::readCloud] Failure at reading file ";
+        std::cerr << filename;
+        std::cerr << ", returning empty cloud." << std::endl;
+        cloud.clear();
+        return;
+    }
+
     width = img.cols;
     height = img.rows;
 
     bool dense = true;
+
+    cloud.width = width;
+    cloud.height = height;
+    cloud.resize(width * height);
 
     #ifdef _OPENMP
     #pragma omp parallel for shared(cloud, img)
@@ -75,6 +91,4 @@ void RGBDReader::RGBD_TUM_Reader::readCloud(const std::string filename, OutputCl
     }
 
     cloud.is_dense = dense;
-
-    file.close();
 }
