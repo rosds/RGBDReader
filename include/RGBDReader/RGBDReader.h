@@ -12,8 +12,7 @@
 
 namespace RGBDReader {
 
-/** \class Reader
- *  \brief Abstract reader class to handle differente benchmarks readers.
+/** \brief Abstract reader class to handle differente benchmarks readers.
  */
 class Reader {
 public:
@@ -59,6 +58,8 @@ public:
 };
 
 
+/** \brief Reader class for the TUM RGB-D benchmark.
+ */
 class RGBD_TUM_Reader : public Reader{
 public:
     typedef boost::shared_ptr<RGBD_TUM_Reader> Ptr;

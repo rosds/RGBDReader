@@ -27,3 +27,9 @@ directory, as:
 ```bash
 cmake -DWITH_SAMPLES=ON ..
 ```
+
+###Documentation
+
+Doxygen is needed to generate the documentation. Simply execute `make doc` 
+inside the `build` directory. The generated documentation should be output 
+inside a `doc` directory.
