@@ -48,16 +48,22 @@ target_link_libraries(RGBDReader ${OpenCV_LIBRARIES})
 #   Optional sample programs                                                  #
 ############################################################################### 
 
-add_executable (display EXCLUDE_FROM_ALL src/samples/display.cpp)
+option (WITH_SAMPLES "Generate sample binaries" OFF)
+
+if (WITH_SAMPLES)
+
+add_executable (display src/samples/display.cpp)
 target_link_libraries (display RGBDReader 
     ${Boost_LIBRARIES} 
     ${PCL_LIBRARIES}
     ${OpenCV_LIBRARIES}
 )
 
-add_executable (tum2pcd EXCLUDE_FROM_ALL src/samples/tum2pcd.cpp)
+add_executable (tum2pcd src/samples/tum2pcd.cpp)
 target_link_libraries (tum2pcd RGBDReader 
     ${Boost_LIBRARIES} 
     ${PCL_LIBRARIES}
     ${OpenCV_LIBRARIES}
 )
+
+endif (WITH_SAMPLES)

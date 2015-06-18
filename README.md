@@ -9,4 +9,21 @@ At the moment it only reads depth images from:
 
 ###Sample programs
 
+The project requires `cmake` for build. To compile simply execute the 
+following in the project directory:
 
+```bash
+mkdir build
+cd build
+cmake ..
+make
+```
+
+The output library should be located in the `lib` directory inside `build`. 
+Additionally, you can build some sample binaries with the **WITH_SAMPLES** 
+option. Simply specify it when running the `cmake` command inside the `build` 
+directory, as:
+
+```bash
+cmake -DWITH_SAMPLES=ON ..
+```
