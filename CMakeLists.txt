@@ -41,8 +41,10 @@ include_directories (include)
 
 set (SRC src/RGBDReader.cpp)
 add_library (RGBDReader SHARED ${SRC})
-target_link_libraries(RGBDReader ${OpenCV_LIBRARIES})
+target_link_libraries (RGBDReader ${OpenCV_LIBRARIES})
 
+install (TARGETS RGBDReader DESTINATION lib)
+install (DIRECTORY include/RGBDReader DESTINATION include)
 
 ############################################################################### 
 #   Optional sample programs                                                  #
