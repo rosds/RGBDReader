@@ -6,12 +6,12 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 
-############################################################################### 
-#   Find packages                                                             #
-############################################################################### 
+############################################################################## 
+#   Find packages                                                            #
+############################################################################## 
 
 #   Boost C++ Library
-find_package (Boost 1.46 COMPONENTS program_options REQUIRED)
+find_package (Boost COMPONENTS program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
@@ -35,9 +35,9 @@ endif()
 include_directories (include)
 
 
-############################################################################### 
-#   RGBDReader Library build                                                  #
-############################################################################### 
+############################################################################## 
+#   RGBDReader Library build                                                 #
+############################################################################## 
 
 set (SRC src/RGBDReader.cpp)
 add_library (RGBDReader SHARED ${SRC})
@@ -46,9 +46,9 @@ target_link_libraries (RGBDReader ${OpenCV_LIBRARIES})
 install (TARGETS RGBDReader DESTINATION lib)
 install (DIRECTORY include/RGBDReader DESTINATION include)
 
-############################################################################### 
-#   Optional sample programs                                                  #
-############################################################################### 
+############################################################################## 
+#   Optional sample programs                                                 #
+############################################################################## 
 
 option (WITH_SAMPLES "Generate sample binaries" OFF)
 
@@ -70,10 +70,9 @@ target_link_libraries (tum2pcd RGBDReader
 
 endif (WITH_SAMPLES)
 
-
-##############################################################################
-#   Doxygen documentation                                                    #
-##############################################################################
+#############################################################################
+#   Doxygen documentation                                                   #
+#############################################################################
 
 # adds custom command 'make doc' to generate the documentation.
 find_package(Doxygen)
